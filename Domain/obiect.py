@@ -8,14 +8,17 @@ def creare_obiect(id, nume, descriere, pret, locatie):
     param. locatie: string (exact 4 caractere)
     return: un dictionar
     """
-    if id < 1:
-        raise ValueError("ID-ul nu poate fi nul sau negativ!")
+
+    if id < '1':
+        raise ValueError("ID-ul nu poate fi nul sau negativ! Introduceti alt id!")
     if len(nume) == 0:
-        raise ValueError("Numele nu poate fi nul!")
+        raise ValueError("Numele nu poate fi nul! Introduceti un nume!")
     if len(descriere) == 0:
         raise ValueError("Descrierea nu poate fi nula!")
-    if len(str(int(pret))) != 4 and len(str(pret).replace(".", "")) != 4:
-        raise ValueError("Pretul de achizitie trebuie sa aiba exact 4 cifre!")
+    if pret.is_integer() is True and len(str(int(pret))) != 4:
+        raise ValueError("Pretul trebuie sa aiba exact 4 cifre! Introduceti alt pret!")
+    if pret.is_integer() is False and len(str(pret).replace(".", "")) != 4:
+        raise ValueError("Pretul trebuie sa aiba exact 4 cifre! Introduceti alt pret!")
     if len(locatie) != 4:
         raise ValueError("Locatia trebuie sa aiba exact 4 caractere!")
     return {"id": id, "nume": nume, "descriere": descriere, "pret": pret, "locatie": locatie}
