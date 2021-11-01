@@ -4,19 +4,19 @@ from Logic.crud import add_object, get_by_id, delete_object, modify_object
 
 def test_add_object():
     lista = []
-    lista = add_object("1", "masca", "protectie", 1.0, "amf1", lista)
+    lista = add_object("1", "Monitor", "HP", 9312, "bir3", lista)
     assert len(lista) == 1
     assert get_id(get_by_id("1", lista)) == "1"
-    assert get_name(get_by_id("1", lista)) == "masca"
-    assert get_description(get_by_id("1", lista)) == "protectie"
-    assert get_pret(get_by_id("1", lista)) == 1.0
-    assert get_location(get_by_id("1", lista)) == "amf1"
+    assert get_name(get_by_id("1", lista)) == "Monitor"
+    assert get_description(get_by_id("1", lista)) == "HP"
+    assert get_pret(get_by_id("1", lista)) == 9312
+    assert get_location(get_by_id("1", lista)) == "bir3"
 
 
 def test_delete_object():
     lista = []
-    lista = add_object("1", "mustar", "dulce", 10, "sal3", lista)
-    lista = add_object("2", "sunca", "porc", 12, "dep2", lista)
+    lista = add_object("1", "Consola", "PS4", 3000, "sal3", lista)
+    lista = add_object("2", "Drona", "cu telecomanda", 1200, "dep2", lista)
     lista = delete_object("1", lista)
     assert len(lista) == 1
     assert get_by_id("1", lista) is None
@@ -58,10 +58,11 @@ def test_modify_object():
 
 def test_get_by_id():
     lista = []
-    lista = add_object(1, "Calculator", "Horizon", 900.00, "birou", lista)
-    lista = add_object(2, "Monitor Dell", "23.5'', HD, 148Hz", 1099.0, "sala conferinte", lista)
+    lista = add_object(1, "Calculator", "Horizon", 9000, "bir1", lista)
+    lista = add_object(2, "Monitor Dell", "23.5'', HD, 148Hz", 1099, "amf2", lista)
     assert get_id(get_by_id(2, lista)) == 2
     assert get_name(get_by_id(2, lista)) == "Monitor Dell"
     assert get_description(get_by_id(2, lista)) == "23.5'', HD, 148Hz"
-    assert get_pret(get_by_id(2, lista)) == 1099.0
-    assert get_location(get_by_id(2, lista)) == "sala conferinte"
+    assert get_pret(get_by_id(2, lista)) == 1099
+    assert get_location(get_by_id(2, lista)) == "amf2"
+
