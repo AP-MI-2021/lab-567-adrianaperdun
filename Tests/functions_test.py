@@ -30,6 +30,8 @@ def test_max_price():
     rezultat = max_price(lista)
     assert rezultat["LOC1"] == 4000
     assert rezultat["LOC2"] == 3000
+    assert rezultat["parter"] == 4000
+    assert rezultat["arhiva"] == 3000
 
 
 def test_ascending_order():
@@ -53,4 +55,5 @@ def test_sum():
     lista = add_object(4, "obiect 4", "descriere 4", 2000, "birou", lista)
     rezultat = sum(lista)
     assert rezultat["parter"] == 6000
+    assert rezultat["arhiva"] == 4000
     assert rezultat["arhiva"] == 4000
