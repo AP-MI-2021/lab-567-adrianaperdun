@@ -20,7 +20,7 @@ def creare_obiect(id, nume, descriere, pret, locatie):
         raise ValueError("Pretul de achizitie trebuie sa aiba exact 4 cifre!")
     if len(locatie) != 4:
         raise ValueError("Locatia trebuie sa aiba exact 4 caractere!")
-    return {"id": ID, "nume": nume, "descriere": descriere, "pret": pret, "locatie": locatie}
+    return {"id": id, "nume": nume, "descriere": descriere, "pret": pret, "locatie": locatie}
 
 
 def get_id(obiect):
