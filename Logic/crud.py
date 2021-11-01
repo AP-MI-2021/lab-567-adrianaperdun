@@ -9,13 +9,13 @@ def add_object(id, nume, descriere, pret, locatie, lista):
     :param descriere: string
     :param pret: float
     :param locatie: string
-    :param list: list
+    :param lista: list
     :return: Lista obtinuta dupa adugarea tuturor obiectelor.
     """
     if get_by_id(id, lista) is not None:
         raise ValueError("ID-ul introdus exista!")
-    object=creare_obiect(id, nume, descriere, pret, locatie)
-    return lista+[object]
+    obiect=creare_obiect(id, nume, descriere, pret, locatie)
+    return lista+[obiect]
 
 
 def get_by_id(id, lista):

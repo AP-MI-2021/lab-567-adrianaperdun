@@ -1,26 +1,26 @@
 def creare_obiect(id, nume, descriere, pret, locatie):
     """
-    Creeaza o lista, ce reprezinta informatii despre un obiect.
-    param. id: string
+    creeaza un dictionar ce reprezinta un obiect
+    param. id: int
     param. nume: string
     param. descriere: string
-    param. pret: float
-    param. locatie: string
-    :return: caracteristicile obiectului
+    param. pret_achizitie: float (exact 4 caractere)
+    param. locatie: string (exact 4 caractere)
+    return: un dictionar
     """
     if id < '1':
-        raise ValueError("ID-ul introdus nu e bun, deoarece nu poate fi nul sau negativ!")
+        raise ValueError("ID-ul nu poate fi nul sau negativ!")
     if len(nume) == 0:
-        raise ValueError("Numele introdus nu e bun, reincercati!")
+        raise ValueError("Numele nu poate fi nul!")
     if len(descriere) == 0:
-        raise ValueError("Descrierea nu poate lipsi. Va rugam sa adaugati descriere!")
-    if float(pret).is_integer() is True and len(str(float(pret))) != 4:
-        raise ValueError("Pretul de achizitie nu poate depasi 4 caractere. Introduceti alt pret!")
-    if float(pret).is_integer() is False and len(str(pret).replace(".", "")) != 4:
-        raise ValueError("Pretul de achizitie are doar 4 carctere. Introduceti alt pret!")
+        raise ValueError("Descrierea nu poate fi nula!")
+    if pret.is_integer() is True and len(str(int(pret))) != 4:
+        raise ValueError("Pretul de achizitie trebuie sa aiba exact 4 cifre!")
+    if pret.is_integer() is False and len(str(pret).replace(".", "")) != 4:
+        raise ValueError("Pretul de achizitie trebuie sa aiba exact 4 cifre!")
     if len(locatie) != 4:
-        raise ValueError("Locatia trebuie sa aiba 4 caractere!")
-    return {"id": id, "nume": nume, "descriere": descriere, "pret": pret, "locatie": locatie}
+        raise ValueError("Locatia trebuie sa aiba exact 4 caractere!")
+    return {"id": ID, "nume": nume, "descriere": descriere, "pret": pret, "locatie": locatie}
 
 
 def get_id(obiect):
