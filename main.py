@@ -1,11 +1,14 @@
-from Tests.test import run_all
-from User_int.interface import run_user_int
+from User_int.command_line import mmain, Show
 
 
 def main():
     lista = []
-    run_user_int(lista)
+    mmain(lista)
+    Show()
+
+
 
 
 if __name__ == '__main__':
     main()
+

@@ -13,7 +13,11 @@ def add_object(id, nume, descriere, pret, locatie, lista):
     :return: Lista obtinuta dupa adugarea tuturor obiectelor.
     """
     if get_by_id(id, lista) is not None:
-        raise ValueError("ID-ul introdus exista!")
+        raise ValueError("Id-ul exista!")
+    if len(locatie) > 4:
+        raise ValueError("Locatia trebuie sa continta cel mult 4 caractere!")
+    if len(locatie) == 0:
+        raise ValueError("Locatia nu poate fi nula!")
     obiect=creare_obiect(id, nume, descriere, pret, locatie)
     return lista+[obiect]
 
