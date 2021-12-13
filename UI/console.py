@@ -1,256 +1,168 @@
-from Domain.rezervare import to_string
-from Logic.crud import add, delete, modify
-from Logic.functions import Upgrade, reduce, max_price, ordo, suma, undo, redo
+from Domain.rezervare import toString
+from Logic.crud import adaugaRezervare, stergereRezervare, modificaRezervare
+from Logic.functions import trecereaClasaSuperioaraDupaNume, ieftinirePretRezervariDupaCheckin, \
+    pretMaximRezervare, ordoneazaRezervarileDescrescDupaPret, sumaPreturiPerNume
 from UI.commandline import commandLine
 
 
-def startmenu(lista):
-    """
-    meniul initial
-    :return:
-    """
-    while True:
-        print("1. Consola.")
-        print("2. Command line.")
-        op = input("Alegeti meniul: ")
-        if op == "1":
-            lista = printMenu()
-        elif op == "2":
-            lista = commandLine(lista)
-        else:
-            print("Optiune gresita. Reincercati.")
-
-
-def uiupgrade(lista, undo_lista, redo_list):
-    nume = input("Dati numele clasei: ")
-    rez = Upgrade(nume, lista)
-    undo_lista.append(lista)
-    redo_list.clear()
-    return rez
-
-
-def uireduce(lista, undo_list, redo_list):
-    try:
-        p = int(input("Cu cat doriti sa se faca ieftinirea? "))
-        rez = reduce(p, lista)
-        undo_list.append(lista)
-        redo_list.clear()
-        return rez
-    except ValueError as ve:
-        print("Eroare: ", ve)
-        return lista
-
-
-def uimax(lista):
-    rez = max_price(lista)
-    return rez
-
-
-def uiordo(lista):
-    rez = ordo(lista)
-    showAll(rez)
-
-
-def uisuma(lista):
-    rez = suma(lista)
-    for n in rez:
-        print("Pentru {} suma este: {}".format(n, rez[n]))
-
-
-def printMenu():
-    '''
-    meniul afisat
-    '''
-    rezervari = []
+"""def startMenu(lista):
     lista = []
-    undo_list = []
-    redo_list = []
+    print("1.Command line")
+    print("2.Consola")
     while True:
-        print("1. Crud rezervare.")
-        print("2. Trecerea la o clasa superioara, dupa nume.")
-        print("3. Ieftinirea tuturor rezervărilor la care s-a făcut checkin cu un procentaj citit.")
-        print("4. Determinarea prețului maxim pentru fiecare clasă.")
-        print("5. Ordonarea rezervărilor descrescător după preț.")
-        print("6. Afișarea sumelor prețurilor pentru fiecare nume")
-        print("7. Undo.")
-        print("8. Redo.")
-        print("x. Iesire.")
-        op = input("Dati optiunea: ")
-        if op == "1":
-            lista = meniul2(lista)
-        elif op == "2":
-            lista = uiupgrade(lista, undo_list, redo_list)
-        elif op == "3":
-            lista = uireduce(lista, undo_list, redo_list)
-        elif op == "4":
-            uimax(lista)
-        elif op == "5":
-            uiordo(lista)
-        elif op == "6":
-            uisuma(lista)
-        elif op == "7":
-            rezervari = undo(rezervari, undo_list, redo_list)
-        elif op == "8":
-            rezervari = redo(rezervari, undo_list, redo_list)
-        elif op == "x":
-            break
-        else:
-            print("Optiunea este gresita. Reincercati.")
+        op = input("Dati optiune: ")
 
+        if op == "1":
+            commandLine(lista)
+        elif op == "2":
+            printMenu1()
+        else:
+            print("Optiune gresita!")"""
+
+
+def printMenu1():
+    print("1. Adauga rezervare")
+    print("2. Sterge rezervare")
+    print("3. Modifica rezervarea")
+    print("4. Trece toate rezervările făcute pe un nume citit la o clasă superioară.")
+    print("5. Ieftineste toate rezervările la care s-a făcut checkin cu un procentaj citit.")
+    print("6. Determina prețul maxim pentru fiecare clasă.")
+    print("7. Ordoneaza rezervările descrescător după preț.")
+    print("8. Afișaza sumele prețurilor pentru fiecare nume")
+    print("9. Undo")
+    print("10. Redo")
+    print("11. Afiseaza toate rezervariile")
+    print("12. Meniul initial.")
+    print("x. Iesire")
 
 
 def uiAdaugaRezervare(lista, undoList, redoList):
-    '''
-    adauga o rezervare
-    :param lista: lista de rezervari
-    '''
     try:
-        id=input('Dati id-ul: ')
-        nume=input("Dati numele: ")
-        clasa=input("Dati clasa: ")
-        pret=float(input("Dati pretul: "))
-        checkin=input("S-a facut checkin-ul? Da/Nu: ")
-
-        rezultat = add(id, nume, clasa, pret, checkin, lista)
+        id = input("Dati id-ul: ")
+        nume = input("Dati numele: ")
+        clasa = input("Dati clasa (`economy`, `economy plus`, `business`): ")
+        pret = float(input("Dati pret-ul: "))
+        checkin = input("Dati checkin-ul făcut (`da` / `nu`): ")
+        rezultat = adaugaRezervare(id, nume, clasa, pret, checkin, lista)
         undoList.append(lista)
         redoList.clear()
         return rezultat
     except ValueError as ve:
-        print("Eroare", ve)
+        print("Eroarea: ", ve)
         return lista
 
 
-def uiStergeRezervare(lista, undoList, redoList):
-    '''
-    sterge o rezervare
-    :param lista: lista de rezervari
-    '''
+def uiStergereRezervare(lista, undoList, redoList):
     try:
-        id=input("Dati id-ul rezervarii ce trebuie sterse: ")
-        rezultat = delete(id,lista)
+        id = input("Dati id-ul rezervarii de sters: ")
+        rezultat = stergereRezervare(id, lista)
         undoList.append(lista)
         redoList.clear()
         return rezultat
     except ValueError as ve:
-        print("Eroare:", ve)
-
+        print("Eroarea: ", ve)
+        return lista
 
 
 def uiModificaRezervare(lista, undoList, redoList):
-    '''
-    modifica o rezervare
-    :param lista: lista de rezervari
-    '''
     try:
-        id = input('Dati id-ul rezervarii de modificat: ')
-        nume = input("Dati numele nou: ")
-        clasa = input("Dati noua clasa: ")
+        id = input("Dati id-ul rezervarii de modificat: ")
+        nume = input("Dati noul numele: ")
+        clasa = input("Dati noua clasa (`economy`, `economy plus`, `business`): ")
         pret = float(input("Dati noul pret: "))
-        checkin = input("S-a facut checkin-ul? Da/Nu: ")
-
-        rezultat = modify(id,nume,clasa,pret,checkin,lista)
+        checkin = input("Dati noul checkin făcut (`da` / `nu`): ")
+        rezultat = modificaRezervare(id, nume, clasa, pret, checkin, lista)
         undoList.append(lista)
         redoList.clear()
         return rezultat
     except ValueError as ve:
-        print("Eroare",ve)
+        print("Eroarea: ", ve)
+        return lista
+
+
+def uiTrecereaClasaSuperioaraDupaNume(lista, undoList, redoList):
+    nume = input("Dati numele: ")
+    rezultat = trecereaClasaSuperioaraDupaNume(nume, lista)
+    undoList.append(lista)
+    redoList.clear()
+    return rezultat
+
+
+def uiIeftinirePretRezervariDupaCheckin(lista, undoList, redoList):
+    try:
+        procentaj = int(input("Dati procentajul cu care sa se faca ieftirirea:"))
+        rezultat = ieftinirePretRezervariDupaCheckin(procentaj, lista)
+        undoList.append(lista)
+        redoList.clear()
+        return rezultat
+    except ValueError as ve:
+        print("Eroarea: ", ve)
+        return lista
+
+
+def uiPretMaximRezervare(lista):
+    rezultat = pretMaximRezervare(lista)
+    return rezultat
+
+
+def uiOrdoneazaRezervarileDescrescDupaPret(lista):
+    rezultat = ordoneazaRezervarileDescrescDupaPret(lista)
+    showAll(rezultat)
+
+
+def uiSumaPreturiPerNume(lista):
+    rezultat = sumaPreturiPerNume(lista)
+    for nume in rezultat:
+        print("Pentru numele {} suma preturilor este: {}".format(nume, rezultat[nume]))
 
 
 def showAll(lista):
-    '''
-    afiseaza toate rezervarile facute
-    :param lista: rezervarile facute
-    '''
     for rezervare in lista:
-        print(to_string(rezervare))
+        print(toString(rezervare))
 
-
-def meniul2(lista):
-    '''
-    submeniul pentru optiunea 1
-    '''
-
-    undoList= []
-    redoList= []
-    while True:
-        print('1.Adauga o rezervare.')
-        print('2.Modifica o rezervare.')
-        print('3.Sterge o rezervare.')
-        print('4.Revenire la cealalta pagina de functionalitati.')
-        print("5. Undo.")
-        print("6. Redo.")
-        print('7.Afiseaza lista de rezervari.')
-        op = input('Alege optiunea: ')
-        if op == '1':
-            lista=uiAdaugaRezervare(lista,undoList,redoList)
-        elif op == '2':
-            lista = uiModificaRezervare(lista,undoList, redoList)
-        elif op == '3':
-            lista = uiStergeRezervare(lista,undoList, redoList)
-        elif op == '7':
-            showAll(lista)
-        elif op == '4':
-            return lista
-        elif op == '5':
-            if len(undoList) > 0:
-                redoList.append(lista)
-                lista= undoList.pop()
-            else:
-                print("Nu se poate face Undo!")
-        elif op == '6':
-            if len(redoList) > 0:
-                undoList.append(lista)
-                lista= redoList.pop()
-            else:
-                print("Nu se poate face Redo.")
 
 def runMenu(lista):
-    undoList= []
-    redoList= []
-
-    while True:
-        printMenu()
-        op=input("Dati optiunea: ")
-        if op == "1":
-            lista= meniul2(lista)
-        elif op == 'a':
-            showAll(lista)
-        elif op == '2':
-            try:
-                numele=input("Dati numele clientului: ")
-                lista=Upgrade(lista,numele,undoList, redoList)
-                print("Upgrade-ul s-a realizat.")
-            except ValueError as ve:
-                print("Eroare", ve)
-        elif op == '3':
-            try:
-                procent=float(input("Dati procentul cu care vreti sa se ieftineasca rezervarea:"))
-                lista=reduce(lista,procent,undoList,redoList)
-                print("Preturile au fost reduse.")
-            except ValueError as vee:
-                print("Eroare",vee)
-        elif op == '4':
-            print(max_price(lista,undoList,redoList))
-        elif op == '5':
-            lista=ordo(lista,undoList,redoList)
-        elif op == '6':
-            suma(lista)
-
-        elif op == '7':
-            if len(undoList) > 0:
-                redoList.append(lista)
-                lista= undoList.pop()
+     undoList = []
+     redoList = []
+     while True:
+         try:
+            printMenu1()
+            optiune = input("Dati optiunea: ")
+            if optiune == "1":
+                lista = uiAdaugaRezervare(lista, undoList, redoList)
+            elif optiune == "2":
+                lista = uiStergereRezervare(lista, undoList, redoList)
+            elif optiune == "3":
+                lista = uiModificaRezervare(lista, undoList, redoList)
+            elif optiune == "4":
+                lista = uiTrecereaClasaSuperioaraDupaNume(lista, undoList, redoList)
+            elif optiune == "5":
+                lista = uiIeftinirePretRezervariDupaCheckin(lista, undoList, redoList)
+            elif optiune == "6":
+                uiPretMaximRezervare(lista)
+            elif optiune == "7":
+                uiOrdoneazaRezervarileDescrescDupaPret(lista)
+            elif optiune == "8":
+                uiSumaPreturiPerNume(lista)
+            elif optiune == "9":
+                if len(undoList) > 0:
+                    redoList.append(lista)
+                    lista = undoList.pop()
+                else:
+                    print("Nu se poate face undo!")
+            elif optiune == "10":
+                if len(redoList) > 0:
+                    undoList.append(lista)
+                    lista = redoList.pop()
+                else:
+                    print("Nu se poate face redo!")
+            elif optiune == "11":
+                showAll(lista)
+            elif optiune == "12":
+                startMenu(lista)
+            elif optiune == "x":
+                break
             else:
-                print("Nu se poate face Undo!")
-        elif op == '8':
-            if len(redoList) > 0:
-                undoList.append(lista)
-                lista= redoList.pop()
-            else:
-                print("Nu se poate face Redo.")
-
-        elif op == 'x':
-            break
-        else:
-            print("Optiune invalida. Reincercati.")
-
+                print("Optiune gresita! Reincercati")
+         except Exception as ex:
+             print("Eroare: ", ex)

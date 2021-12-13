@@ -1,34 +1,34 @@
-from Domain.rezervare import get_id, get_clasa, get_pret
-from Logic.crud import add, get_by_id
-from Logic.functions import Upgrade, reduce
+from Domain.rezervare import getId, getClasa, getPret
+from Logic.crud import adaugaRezervare, getById
+from Logic.functions import trecereaClasaSuperioaraDupaNume, ieftinirePretRezervariDupaCheckin
 
 
 def testUndoRedo():
     lista = []
     undoList = []
     redoList = []
-    rezultat = add("1", "Marius", "economy", 350, "da", lista)
+    rezultat = adaugaRezervare("1", "Marius", "economy", 350, "da", lista)
     undoList.append(lista)
     lista = rezultat
 
-    rezultat = add("2", "Ionut", "business", 100, "da", lista)
+    rezultat = adaugaRezervare("2", "Ionut", "business", 100, "da", lista)
     undoList.append(lista)
     lista = rezultat
 
-    rezultat = add("3", "Ionut", "business", 550, "da", lista)
+    rezultat = adaugaRezervare("3", "Ionut", "business", 550, "da", lista)
     undoList.append(lista)
     lista = rezultat
 
     redoList.append(lista)
     lista = undoList.pop()
     assert len(lista) == 2
-    assert get_id(lista[1]) == "2"
-    assert get_id(lista[0]) == "1"
+    assert getId(lista[1]) == "2"
+    assert getId(lista[0]) == "1"
 
     redoList.append(lista)
     lista = undoList.pop()
     assert len(lista) == 1
-    assert get_id(lista[0]) == "1"
+    assert getId(lista[0]) == "1"
     assert undoList == [[]]
 
     redoList.append(lista)
@@ -42,16 +42,16 @@ def testUndoRedo():
     assert len(lista) == 0
     assert undoList == []
 
-    rezultat = add("1", "Marius", "economy", 100, "da", lista)
+    rezultat = adaugaRezervare("1", "Marius", "economy", 100, "da", lista)
     undoList.append(lista)
     lista = rezultat
     redoList.clear()
 
-    rezultat = add("2", "Ionut", "business", 120, "nu", lista)
+    rezultat = adaugaRezervare("2", "Ionut", "business", 120, "nu", lista)
     undoList.append(lista)
     lista = rezultat
 
-    rezultat = add("3", "Crina", "economy plus", 125, "nu", lista)
+    rezultat = adaugaRezervare("3", "Crina", "economy plus", 125, "nu", lista)
     undoList.append(lista)
     lista = rezultat
 
@@ -69,13 +69,13 @@ def testUndoRedo():
     redoList.append(lista)
     lista = undoList.pop()
     assert len(lista) == 2
-    assert get_id(lista[1]) == "2"
-    assert get_id(lista[0]) == "1"
+    assert getId(lista[1]) == "2"
+    assert getId(lista[0]) == "1"
 
     redoList.append(lista)
     lista = undoList.pop()
     assert len(lista) == 1
-    assert get_id(lista[0]) == "1"
+    assert getId(lista[0]) == "1"
     assert undoList == [[]]
 
     undoList.append(lista)
@@ -93,16 +93,16 @@ def testUndoRedo():
     redoList.append(lista)
     lista = undoList.pop()
     assert len(lista) == 2
-    assert get_id(lista[1]) == "2"
-    assert get_id(lista[0]) == "1"
+    assert getId(lista[1]) == "2"
+    assert getId(lista[0]) == "1"
 
     redoList.append(lista)
     lista = undoList.pop()
     assert len(lista) == 1
-    assert get_id(lista[0]) == "1"
+    assert getId(lista[0]) == "1"
     assert undoList == [[]]
 
-    rezultat = add("4", "Bianca", "economy plus", 250, "da", lista)
+    rezultat = adaugaRezervare("4", "Bianca", "economy plus", 250, "da", lista)
     undoList.append(lista)
     lista = rezultat
     redoList.clear()
@@ -147,30 +147,30 @@ def testUndoRedoTrecereClasaSuperioara():
     undoList = []
     redoList = []
 
-    rezultat = add("1", "Marius", "economy", 100, "da", lista)
+    rezultat = adaugaRezervare("1", "Marius", "economy", 100, "da", lista)
     undoList.append(lista)
     lista = rezultat
 
-    rezultat = add("2", "Ionut", "business", 320, "nu", lista)
+    rezultat = adaugaRezervare("2", "Ionut", "business", 320, "nu", lista)
     undoList.append(lista)
     lista = rezultat
 
-    rezultat = add("3", "Crina", "economy plus", 225, "nu", lista)
+    rezultat = adaugaRezervare("3", "Crina", "economy plus", 225, "nu", lista)
     undoList.append(lista)
     lista = rezultat
 
-    rezultat = Upgrade("Martinescu", lista)
+    rezultat = trecereaClasaSuperioaraDupaNume("Martinescu", lista)
     undoList.append(lista)
     lista = rezultat
-    assert get_clasa(get_by_id("1", lista)) == "economy plus"
+    assert getClasa(getById("1", lista)) == "economy plus"
 
     redoList.append(lista)
     lista = undoList.pop()
-    assert get_clasa(get_by_id("1", lista)) == "economy"
+    assert getClasa(getById("1", lista)) == "economy"
 
     undoList.append(lista)
     lista = redoList.pop()
-    assert get_clasa(get_by_id("1", lista)) == "economy plus"
+    assert getClasa(getById("1", lista)) == "economy plus"
 
 
 def testUndoRedoIeftinire():
@@ -178,26 +178,26 @@ def testUndoRedoIeftinire():
     undoList = []
     redoList = []
 
-    rezultat = add("1", "Marius", "economy", 100, "da", lista)
+    rezultat = adaugaRezervare("1", "Marius", "economy", 100, "da", lista)
     undoList.append(lista)
     lista = rezultat
 
-    rezultat = add("2", "Ionut", "business", 120, "nu", lista)
+    rezultat = adaugaRezervare("2", "Ionut", "business", 120, "nu", lista)
     undoList.append(lista)
     lista = rezultat
 
-    rezultat = reduce(10, lista)
+    rezultat = ieftinirePretRezervariDupaCheckin(10, lista)
     undoList.append(lista)
     lista = rezultat
-    assert get_pret(get_by_id("1", lista)) == 90
-    assert get_pret(get_by_id("2", lista)) == 120
+    assert getPret(getById("1", lista)) == 90
+    assert getPret(getById("2", lista)) == 120
 
     redoList.append(lista)
     lista = undoList.pop()
-    assert get_pret(get_by_id("1", lista)) == 100
-    assert get_pret(get_by_id("2", lista)) == 120
+    assert getPret(getById("1", lista)) == 100
+    assert getPret(getById("2", lista)) == 120
 
     undoList.append(lista)
     lista = redoList.pop()
-    assert get_pret(get_by_id("1", lista)) == 90
-    assert get_pret(get_by_id("2", lista)) == 120
+    assert getPret(getById("1", lista)) == 90
+    assert getPret(getById("2", lista)) == 120

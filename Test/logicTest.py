@@ -1,120 +1,108 @@
-from Domain.rezervare import get_id, get_nume, get_clasa, get_pret, get_checkin, create
-from Logic.crud import add, get_by_id, delete, modify
-from Logic.functions import Upgrade, reduce, max_price, ordo, undo, redo, get_by_name, get_by_checkin, suma
+from Domain.rezervare import getId, getNume, getClasa, getPret, getCheckin
+from Logic.crud import adaugaRezervare, getById, stergereRezervare, modificaRezervare
+from Logic.functions import trecereaClasaSuperioaraDupaNume, getByName, ieftinirePretRezervariDupaCheckin, getByCheckin, \
+    ordoneazaRezervarileDescrescDupaPret, sumaPreturiPerNume
 
 
-def testadd():
-    '''
-    testeaza daca aduga o rezervare
-    '''
-    lista = add('1', 'Adriana', 'economy', 200, 'Da', [])
-    assert get_id(get_by_id("1", lista)) == '1'
-    assert get_nume(get_by_id("1", lista)) == "Adriana"
-    assert get_clasa(get_by_id("1", lista)) == 'economy'
-    assert get_pret(get_by_id("1", lista)) == 200
-    assert get_checkin(get_by_id("1", lista)) == "Da"
-
-
-def testdelete():
-    '''
-    testeaza daca sterge o rezervare
-    '''
-    undoList = []
-    redoList = []
-    lista = add('1', 'Adriana', 'economy', 200, 'Da', [])
-    lista = add('2', 'Andreea', 'economy', 200, 'Nu', lista)
-    lista = delete('1', lista)
+def testAdaugareRezervare():
+    lista = []
+    lista = adaugaRezervare("2", "Ana", "business", 300, "Nu", lista)
     assert len(lista) == 1
-    assert get_by_id('1',lista) is None
-    lista = delete('3', lista)
+    assert getId(getById("2", lista)) == "2"
+    assert getNume(getById("2", lista)) == "Ana"
+    assert getClasa(getById("2", lista)) == "business"
+    assert getPret(getById("2", lista)) == 300
+    assert getCheckin(getById("2", lista)) == "Nu"
+
+
+
+def testStergereRezervare():
+    lista = []
+    lista = adaugaRezervare("1", "Ana", "business", 300, "Nu", [])
+    lista = adaugaRezervare("2", "Teo", "business", 360, "Nu", lista)
+
+    lista= stergereRezervare("1", lista)
     assert len(lista) == 1
-    assert get_by_id('2', lista) is not None
+    assert getById("1", lista) is None
+
+    try:
+        lista = stergereRezervare("3", lista)
+    except ValueError:
+        assert len(lista) == 1
+        assert getById("2", lista) is not None
+    except Exception:
+        assert False
 
 
-def testgetById():
-    '''
-    testeaza daca gaseste o anumita rezervare
-    '''
 
-    lista= add('1', 'Adriana', 'economy', 200, 'Da', [])
-    assert get_by_id('1',lista) is not None
-
-
-def testmodify():
-    '''
-    testeaza daca modifica corect o rezervare
-    '''
-
-    lista = add('1', 'Adriana', 'economy', 200, 'Da', [])
-    lista= modify('1', 'Adriana', 'economy plus', 250, 'Nu', lista)
-    assert get_id(get_by_id("1", lista)) == '1'
-    assert get_nume(get_by_id("1", lista)) == "Adriana"
-    assert get_clasa(get_by_id("1", lista)) == 'economy plus'
-    assert get_pret(get_by_id("1", lista)) == 250
-    assert get_checkin(get_by_id("1", lista)) == "Nu"
-
-
-def testupgrade():
-    '''
-    testeaza daca upgradeaza corect o clasa
-    '''
+def testModificaRezervare():
     lista = []
-    lista = add("1", "Adriana", "economy", 1400, "da", lista)
-    lista = add("2", "Ariana", "business", 360, "nu", lista)
+    lista = adaugaRezervare("1", "Ana", "business", 1400, "Da", lista)
+    lista = adaugaRezervare("2", "Teo", "business", 800, "Nu", lista)
+    lista = modificaRezervare("1", "Ana", "business", 1400, "Da", lista)
 
-    lista = Upgrade("Adriana", lista)
-    rezervareUpdatata = get_by_name("Adriana", lista)
-    assert get_id(rezervareUpdatata) == "1"
-    assert get_nume(rezervareUpdatata) == "Ariana"
-    assert get_clasa(rezervareUpdatata) == "economy plus"
-    assert get_pret(rezervareUpdatata) == 1400
-    assert get_checkin(rezervareUpdatata) == "da"
+    rezervareUpdatata = getById("1", lista)
+    assert getId(rezervareUpdatata) == "1"
+    assert getNume(rezervareUpdatata) == "Ana"
+    assert getClasa(rezervareUpdatata) == "business"
+    assert getPret(rezervareUpdatata) == 1400
+    assert getCheckin(rezervareUpdatata) == "Da"
+
+    rezervareNeupdatata = getById("2", lista)
+    assert getId(rezervareNeupdatata) == "2"
+    assert getNume(rezervareNeupdatata) == "Teo"
+    assert getClasa(rezervareNeupdatata) == "business"
+    assert getPret(rezervareNeupdatata) == 800
+    assert getCheckin(rezervareNeupdatata) == "Nu"
 
 
-def testreduce():
-    '''
-    testeaza daca ieftineste corect cu un procent
-    '''
+def testTrecereaClasaSuperioaraDupaNume():
     lista = []
-    lista = add("1", "Adriana", "economy", 1400, "da", lista)
-    lista = add("2", "Ariana", "business", 360, "nu", lista)
+    lista = adaugaRezervare("1", "Ana", "economy", 1400, "da", [])
+    lista = adaugaRezervare("2", "Teo", "business", 360, "nu", lista)
 
-    lista = reduce(42, lista)
-    rezervareUpdatata = get_by_checkin(lista)
-    assert get_id(rezervareUpdatata) == "1"
-    assert get_nume(rezervareUpdatata) == "Adriana"
-    assert get_clasa(rezervareUpdatata) == "economy"
-    assert get_pret(rezervareUpdatata) == 812
-    assert get_checkin(rezervareUpdatata) == "da"
+    lista = trecereaClasaSuperioaraDupaNume("Ana", lista)
+    rezervareUpdatata = getByName("Ana", lista)
+    assert getId(rezervareUpdatata) == "1"
+    assert getNume(rezervareUpdatata) == "Ana"
+    assert getClasa(rezervareUpdatata) == "economy plus"
+    assert getPret(rezervareUpdatata) == 1400
+    assert getCheckin(rezervareUpdatata) == "da"
 
 
-def testmax():
-    '''
-    testeaza daca gaseste corect preturile maxime al fiecarei clase
-    '''
+def testIeftinirePretRezervariDupaCheckin():
     lista = []
-    lista = add("1", "Adriana", "economy", 140, "da", lista)
-    lista = add("2", "Ariana", "business", 360, "nu", lista)
-    lista = add("3", "Adriana", "economy", 1400, "da", lista)
-    rezultat = suma(lista)
+    lista = adaugaRezervare("1", "Ana", "economy", 1400, "da", [])
+    lista = adaugaRezervare("2", "Teo", "business", 360, "nu", lista)
+
+    lista = ieftinirePretRezervariDupaCheckin(42, lista)
+    rezervareUpdatata = getByCheckin(lista)
+    assert getId(rezervareUpdatata) == "1"
+    assert getNume(rezervareUpdatata) == "Ana"
+    assert getClasa(rezervareUpdatata) == "economy"
+    assert getPret(rezervareUpdatata) == 812
+    assert getCheckin(rezervareUpdatata) == "da"
+
+
+def testOrdoneazaRezervarileDescrescDupaPret():
+    lista = []
+    lista = adaugaRezervare("1", "Ana", "economy", 140, "da", lista)
+    lista = adaugaRezervare("2", "Teo", "business", 360, "nu", lista)
+    lista = adaugaRezervare("3", "Ana", "economy", 1400, "da", lista)
+    lista = adaugaRezervare("4", "Teo", "business", 90, "nu", lista)
+    rezultat = ordoneazaRezervarileDescrescDupaPret(lista)
+    assert getId(rezultat[0]) == "3"
+    assert getId(rezultat[1]) == "2"
+    assert getId(rezultat[2]) == "1"
+    assert getId(rezultat[3]) == "4"
+
+
+def testSumaPreturiPerNume():
+    lista = []
+    lista = adaugaRezervare("1", "Ana", "economy", 140, "da", lista)
+    lista = adaugaRezervare("2", "Teo", "business", 360, "nu", lista)
+    lista = adaugaRezervare("3", "Ana", "economy", 1400, "da", lista)
+    rezultat = sumaPreturiPerNume(lista)
     assert len(rezultat) == 2
-    assert rezultat["Adriana"] == 1540
-    assert rezultat["Ariana"] == 360
-
-
-def testOrdo():
-    '''
-    testeaza daca se ordoneaza corect descrescator rezervarile, in functie de pretul lor
-    '''
-    lista = []
-    lista = add("1", "Adriana", "economy", 140, "da", lista)
-    lista = add("2", "Ariana", "business", 360, "nu", lista)
-    lista = add("3", "Adriana", "economy", 1400, "da", lista)
-    lista = add("4", "Ariana", "business", 90, "nu", lista)
-    rezultat = ordo(lista)
-    assert get_id(rezultat[0]) == "3"
-    assert get_id(rezultat[1]) == "2"
-    assert get_id(rezultat[2]) == "1"
-    assert get_id(rezultat[3]) == "4"
-
-
+    assert rezultat["Ana"] == 1540
+    assert rezultat["Mara"] == 360

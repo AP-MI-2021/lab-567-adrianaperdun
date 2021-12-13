@@ -1,18 +1,19 @@
-from Test.domainTest import testDomain
-from Test.logicTest import testgetById, testOrdo, testmax, testmodify, testreduce, testupgrade, testdelete, testadd
-from Test.testUndoRedo import testUndoRedoTrecereClasaSuperioara, testUndoRedo, testUndoRedoIeftinire
+from Test.domainTest import testRezervare
+from Test.logicTest import testAdaugareRezervare, testStergereRezervare, testModificaRezervare, \
+    testTrecereaClasaSuperioaraDupaNume, testIeftinirePretRezervariDupaCheckin, \
+    testOrdoneazaRezervarileDescrescDupaPret, testSumaPreturiPerNume
+from Test.testUndoRedo import testUndoRedo, testUndoRedoTrecereClasaSuperioara, testUndoRedoIeftinire
 
 
-def alltest():
-    testDomain()
-    testadd()
-    testdelete()
-    testupgrade()
-    testreduce()
-    testgetById()
-    testmodify()
-    testmax()
-    testOrdo()
+def runAllTests():
+    testRezervare()
+    testAdaugareRezervare()
+    testStergereRezervare()
+    testModificaRezervare()
+    testTrecereaClasaSuperioaraDupaNume()
+    testIeftinirePretRezervariDupaCheckin()
+    testOrdoneazaRezervarileDescrescDupaPret()
+    testSumaPreturiPerNume()
     testUndoRedo()
     testUndoRedoTrecereClasaSuperioara()
     testUndoRedoIeftinire()

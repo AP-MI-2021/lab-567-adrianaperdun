@@ -1,16 +1,16 @@
-from Logic.crud import add
-from Test.tests import alltest
-from UI.console import startmenu
+
+from Logic.crud import adaugaRezervare
+from UI.console import printMenu1, runMenu
 
 
 def main():
-    alltest()
     lista = []
-    lista= add('1', 'Adriana', 'economy', 200, 'Da', lista)
-    lista= add('2', 'Andreea', 'business', 202, 'Nu', lista)
-    lista = add('3', 'Andreea', 'economy', 100, 'Da', lista)
-    lista = add('4', 'Magda', 'economy plus', 50, 'Da', lista)
-    lista = add('5', 'Teo', 'economy', 170, 'Da', lista)
-    startmenu(lista)
+    lista = adaugaRezervare("1", "Ana", "business", 200, "nu", lista)
+    lista = adaugaRezervare("2", "Teo", "economy", 1400, "da", lista)
+    lista = adaugaRezervare("3", "Magda", "business", 100, "nu", lista)
+    lista = adaugaRezervare("4", "Madalina", "economy", 1400, "da", lista)
+    lista = adaugaRezervare("5", "Bogdan", "business", 2300, "nu", lista)
+    lista = adaugaRezervare("6", "Octavian", "economy", 140, "da", lista)
+    runMenu(lista)
 
 main()

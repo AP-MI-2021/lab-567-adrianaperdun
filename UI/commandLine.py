@@ -1,5 +1,5 @@
-from Domain.rezervare import to_string
-from Logic.crud import delete, add
+from Domain.rezervare import toString
+from Logic.crud import adaugaRezervare, stergereRezervare
 
 
 def commandLine(lista):
@@ -19,7 +19,7 @@ def commandLine(lista):
             lista=adaugare2(lista, lst3)
         elif lst3[0]=='showall':
             for rezervare in lista:
-                print(to_string(rezervare))
+                print(toString(rezervare))
         elif lst3[0]=='delete':
             lista=stergere2(lista, lst3)
     return lista
@@ -34,7 +34,7 @@ def stergere2(lista,lst3):
                 redoList= []
                 try:
                     id_sters = int(lst3[1])
-                    lista = delete(id_sters,lista, undoList, redoList)
+                    lista = stergereRezervare(id_sters,lista, undoList, redoList)
                     print("Stergerea a fost efectuata cu succes.")
                     return lista
                 except ValueError as ve:
@@ -60,8 +60,8 @@ def adaugare2(lista,lst3):
                     if checkin not in ['Da', 'Nu']:
                         raise ValueError(f'Singurele varinate de checkin acceptate sunt : Da sau Nu')
                     print('Adaugarea a fost inregistrata.')
-                    return add(id, nume, clasa, pret,
-                                  checkin, lista, undoList, redoList)
+                    return adaugaRezervare(id, nume, clasa, pret,
+                                  checkin, lista)
                 except ValueError as ve:
                     print("Eroarea:", ve)
 
