@@ -32,7 +32,6 @@ def printMenu1():
     print("9. Undo")
     print("10. Redo")
     print("11. Afiseaza toate rezervariile")
-    print("12. Meniul initial.")
     print("x. Iesire")
 
 
@@ -158,8 +157,6 @@ def runMenu(lista):
                     print("Nu se poate face redo!")
             elif optiune == "11":
                 showAll(lista)
-            elif optiune == "12":
-                startMenu(lista)
             elif optiune == "x":
                 break
             else:
