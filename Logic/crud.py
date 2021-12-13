@@ -1,83 +1,65 @@
-from Domain.obiect import creare_obiect, get_location, get_id
+from Domain.rezervare import get_id, create
 
 
-def add_object(id, nume, descriere, pret, locatie, lista):
-    """
-    Adaugare obiect nou in lista
-    :param id: string
-    :param nume: string
-    :param descriere: string
+def add(id, nume, clasa, pret, checkin, lista):
+    '''
+    adauga o rezervare noua
+    :param id: str
+    :param nume: str
+    :param clasa: str
     :param pret: float
-    :param locatie: string
-    :param lista: list
-    :return: Lista obtinuta dupa adugarea tuturor obiectelor.
-    """
+    :param checkin: str
+    :param lista: lista initiala
+    :return:lista initiala cu adaugarea inclusa
+    '''
     if get_by_id(id, lista) is not None:
-        raise ValueError("Id-ul exista!")
-    if len(locatie) > 4:
-        raise ValueError("Locatia trebuie sa continta cel mult 4 caractere!")
-    if len(locatie) == 0:
-        raise ValueError("Locatia nu poate fi nula!")
-    obiect=creare_obiect(id, nume, descriere, pret, locatie)
-    return lista+[obiect]
+        raise ValueError("Id-ul exista deja!")
+    rezervare = create(id, nume, clasa, pret, checkin)
+    return lista + [rezervare]
+
+
+def delete(id, lista):
+    '''
+    sterge rezervarea dupa id-ul din lista
+    :param id: id-ul rezervarii de sters, str
+    :param lista:lista de rezervari
+    :return: o lista continand rezervarile cu id-ul direrit de id
+    '''
+
+    return [rezervare for rezervare in lista if get_id(rezervare) != id]
+
+
+def modify(id,nume,clasa,pret,checkin, lista):
+    '''
+    modifica o rezervare
+    :param id: id actual
+    :param nume: nume nou
+    :param clasa:clasa noua
+    :param pret: pret nou
+    :param checkin:checkin nou
+    :param lista: lista initiala de rezervari
+    :return:lista initiala cu modificarea inclusa
+    '''
+    if get_by_id(id, lista) is None:
+        raise ValueError("Nu exista o prajitura cu Id-ul dat!")
+    listaNoua = []
+    for rezervare in lista:
+        if get_id(rezervare) == id:
+            rezervareNoua = create(id, nume, clasa, pret, checkin)
+            listaNoua.append(rezervareNoua)
+        else:
+            listaNoua.append(rezervare)
+    return listaNoua
 
 
 def get_by_id(id, lista):
-    """
-    Cauta in lista obiectul, caruia ii corespunde id-ul dat de utilizator.
-    :param id: string
-    :param lista: list
-    :return: obiectul caruia ii apartine id-ul.
-    """
-    for object in lista:
-        if get_id(object) == id:
-            return object
-
-
-def get_by_location(location, lista):
-    """
-    Cauta in lista obiectul, caruia ii corespunde locatia data de utilizator.
-    :param location: string
-    :param lista: list
-    :return: obiectul caruia ii corespunde locatia.
-    """
-    for object in lista:
-        if get_location(object) == location:
-            return object
-
-
-def delete_object(id, lista):
-    """
-    Sterge obiectul caruia ii corespunde id-ul dat.
-    :param id: string
-    :param lista: list
-    :return: lista dupa eliminarea obiectului.
-    """
-    if get_by_id(id, lista) is None:
-        raise ValueError("Obiectul cu ID-ul introdus nu exista! Introduce-ti alt numar.")
-    return [object for object in lista if get_id(object) != id ]
-
-
-def modify_object(id, nume, descriere, pret, locatie, lista):
-    """
-    Obiectul care are id-ul dat de utilizator se va modifica.
-    :param id: string
-    :param nume: string
-    :param descriere: string
-    :param pret: float
-    :param locatie: string
-    :param lista: list
-    :return: lista dupa modificari.
-    """
-    if get_by_id(id, lista) is None:
-        raise ValueError("Obiectul cu ID-ul introdus nu exista! Introduce-ti alt numar")
-    newlist = []
-    for object in lista:
-        if get_id(object) == id:
-            newobject = creare_obiect(id, nume, descriere, pret, locatie)
-            newlist.append(newobject)
-        else:
-            newlist.append(object)
-    return newlist
-
-
+    '''
+    gaseste rezervare
+    :param id: idul rezervarii de gasit
+    :param lista: lista cu rezervari
+    :return: rezervarea gasita
+    '''
+    for rezervare in lista:
+        if get_id(rezervare) == id:
+            return rezervare
+    return None

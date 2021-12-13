@@ -1,72 +1,69 @@
-def creare_obiect(id, nume, descriere, pret, locatie):
-    """
-    creeaza un obiect
-    :param id: string
-    :param nume: string
-    :param descriere: string
-    :param pret: float
-    :param locatie:string
-    :return: un obiect
-    """
-    return [
-        id,
-        nume,
-        descriere,
-        pret,
-        locatie
-    ]
+def creeazaRezervare(id, nume, clasa, pret, checkin):
+    '''
+    creeaza o rezervare
+    :param id: id-ul rezervarii
+    :param nume: numele pasagerului
+    :param clasa: clasa la care zboara pasagerul
+    :param pret: pretul biletului
+    :param checkin: si-a facut sau nu checkin-ul pasagerul
+    :return: un dictionar cu datele despre rezervare
+    '''
+    return [('id', id,),('nume', nume,), ('clasa', clasa,), ('pret', pret,),('checkin',checkin,)]
 
 
-def get_id(obiect):
-    """
-    id obiect
-    :param obiect: obiectul
-    :return: id-ul obiectului dat ca parametru
-    """
-    return obiect[0]
+def getId(rezervare):
+    '''
+    ia id-ul rezervarii
+    :param rezervare: dictionar de tipuil rezervare
+    :return: id-ul rezervarii
+    '''
+    return rezervare[0][1]
 
 
-def get_nume(obiect):
-    """
-    nume obiect
-    :param obiect: obiectul
-    :return: numele obiectului dat ca parametru
-    """
-    return obiect[1]
+def getNume(rezervare):
+    '''
+    ia numele rezervarii
+    :param rezervare: dictionar de tipul rezervare
+    :return: numele rezervarii
+    '''
+    return rezervare[1][1]
 
 
-def get_descriere(obiect):
-    """
-    descriere obiect
-    :param obiect: obiectul
-    :return: descrierea obiectului dat ca parametru
-    """
-    return obiect[2]
+def getClasa(rezervare):
+    '''
+    ia clasa rezervarii
+    :param rezervare: dictionar de tipul rezervare
+    :return: clasa rezervarii (economy, economy plus, business)
+    '''
+    return rezervare[2][1]
 
 
-def get_pret(obiect):
-    """
-    pret obiect
-    :param obiect: obiectul
-    :return: pretul obiectului dat ca parametru
-    """
-    return obiect[3]
+def getPret(rezervare):
+    '''
+    ia pretul rezervarii
+    :param rezervare: dictionar de tipul rezervare
+    :return: pretul rezervarii
+    '''
+    return rezervare[3][1]
 
 
-def get_locatie(obiect):
-    """
-    locatie obiect
-    :param obiect: obiectul
-    :return: locatia obiectului dat ca parametru
-    """
-    return obiect[4]
+def getCheckin(rezervare):
+    '''
+    ia checkin-ul rezervarii (da/nu)
+    :param rezervare: dictionar de tipul rezervare
+    :return: da/nu
+    '''
+    return rezervare[4][1]
 
 
-def get_str(obiect):
-    """
-    :param obiect:
-    :return: reprezentarea obiectului ca string
-    """
-    return f'Obiectul care are  id-ul {get_id(obiect)} este :{get_nume(obiect)}, avand descrierea: {get_descriere(obiect)} , ' \
-           f'a costat {get_pret(obiect)} ' \
-           f'si se afla in {get_locatie(obiect)}'
+def toString(rezervare):
+    '''
+    afiseaza toate datele despre rezervare
+    :param rezervare: dictionar de tipul rezervare
+    '''
+    if getCheckin(rezervare) == 'Da':
+        checkin = 'a fost facut'
+    else:
+        checkin = 'nu a fost facut'
+    return f"Rezervarea cu ID-ul {getId(rezervare)} este facuta pe numele {getNume(rezervare)}, este incadrata in clasa " \
+           f"{getClasa(rezervare)}, cu pretul de {getPret(rezervare)} lei si checkin-ul {checkin}."
