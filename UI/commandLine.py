@@ -1,12 +1,11 @@
 from Domain.rezervare import toString
-from Logic.crud import adaugaRezervare, stergereRezervare
-
+from Logic.crud import stergeRezervare, adaugaRezervare, modificaRezervare
 
 def commandLine(lista):
     m = input("Da lista de operatii pe care vrei sa le faca programul"
               "(operatii posibile : add, showall, delete) despartite prin ;, in "
               "cadrul comenzii itemele trebuie despartite doar prin virgula, fara spatii albe. \n"
-              "Exemple: add,6,Aaa,economy,200,Da SAU add,7,Adriana,economy,200,Da;showall\n"
+              "Exemple: add,6,Clauu,economy,200,Da SAU add,7,Claudiuu,economy,200,Da;showall\n"
               "Operatia: ")
     lst2 = (m.split(";"))
     map_object = map(str, lst2)
@@ -34,7 +33,7 @@ def stergere2(lista,lst3):
                 redoList= []
                 try:
                     id_sters = int(lst3[1])
-                    lista = stergereRezervare(id_sters,lista, undoList, redoList)
+                    lista = stergeRezervare(id_sters,lista, undoList, redoList)
                     print("Stergerea a fost efectuata cu succes.")
                     return lista
                 except ValueError as ve:
@@ -61,7 +60,7 @@ def adaugare2(lista,lst3):
                         raise ValueError(f'Singurele varinate de checkin acceptate sunt : Da sau Nu')
                     print('Adaugarea a fost inregistrata.')
                     return adaugaRezervare(id, nume, clasa, pret,
-                                  checkin, lista)
+                                  checkin, lista, undoList, redoList)
                 except ValueError as ve:
                     print("Eroarea:", ve)
 

@@ -1,43 +1,69 @@
 def creeazaRezervare(id, nume, clasa, pret, checkin):
     '''
-    Creaza o rezervare
-    :param ID: str
-    :param nume: str
-    :param clasa: str
-    :param preț: float
-    :param checkin: str
-    :return: un dictionar ce retine o prajitura
+    creeaza o rezervare
+    :param id: id-ul rezervarii
+    :param nume: numele pasagerului
+    :param clasa: clasa la care zboara pasagerul
+    :param pret: pretul biletului
+    :param checkin: si-a facut sau nu checkin-ul pasagerul
+    :return: un dictionar cu datele despre rezervare
     '''
+    return [('id', id,),('nume', nume,), ('clasa', clasa,), ('pret', pret,),('checkin',checkin,)]
 
-    return {
-        'id' : id,
-        'nume' : nume,
-        'clasa' : clasa,
-        'pret': pret,
-        'checkin': checkin
-    }
 
 def getId(rezervare):
-    return rezervare['id']
+    '''
+    ia id-ul rezervarii
+    :param rezervare: dictionar de tipuil rezervare
+    :return: id-ul rezervarii
+    '''
+    return rezervare[0][1]
+
 
 def getNume(rezervare):
-    return rezervare['nume']
+    '''
+    ia numele rezervarii
+    :param rezervare: dictionar de tipul rezervare
+    :return: numele rezervarii
+    '''
+    return rezervare[1][1]
+
 
 def getClasa(rezervare):
-    return rezervare['clasa']
+    '''
+    ia clasa rezervarii
+    :param rezervare: dictionar de tipul rezervare
+    :return: clasa rezervarii (economy, economy plus, business)
+    '''
+    return rezervare[2][1]
+
 
 def getPret(rezervare):
-    return rezervare['pret']
+    '''
+    ia pretul rezervarii
+    :param rezervare: dictionar de tipul rezervare
+    :return: pretul rezervarii
+    '''
+    return rezervare[3][1]
+
 
 def getCheckin(rezervare):
-    return rezervare['checkin']
+    '''
+    ia checkin-ul rezervarii (da/nu)
+    :param rezervare: dictionar de tipul rezervare
+    :return: da/nu
+    '''
+    return rezervare[4][1]
 
 
 def toString(rezervare):
-    return "id: {}, nume: {}, clasa: {}, pret: {}, checkin: {}".format(
-        getId(rezervare),
-        getNume(rezervare),
-        getClasa(rezervare),
-        getPret(rezervare),
-        getCheckin(rezervare)
-    )
+    '''
+    afiseaza toate datele despre rezervare
+    :param rezervare: dictionar de tipul rezervare
+    '''
+    if getCheckin(rezervare) == 'Da':
+        checkin = 'a fost facut'
+    else:
+        checkin = 'nu a fost facut'
+    return f"Rezervarea cu ID-ul {getId(rezervare)} este facuta pe numele {getNume(rezervare)}, este incadrata in clasa " \
+           f"{getClasa(rezervare)}, cu pretul de {getPret(rezervare)} lei si checkin-ul {checkin}."

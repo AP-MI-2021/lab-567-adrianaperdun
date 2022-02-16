@@ -1,6 +1,6 @@
 from Domain.rezervare import getId, getClasa, getPret
 from Logic.crud import adaugaRezervare, getById
-from Logic.functions import trecereaClasaSuperioaraDupaNume, ieftinirePretRezervariDupaCheckin
+from Logic.cerinte import trecereaClasaSuperioaraDupaNume, ieftinirePretRezervariDupaCheckin
 
 
 def testUndoRedo():

@@ -1,66 +1,70 @@
-from Domain.rezervare import getId, creeazaRezervare
+from Domain.rezervare import creeazaRezervare, getId
 
 
-def adaugaRezervare (id, nume, clasa, pret, checkin, lista):
+def adaugaRezervare(id,nume,clasa,pret,checkin, lista, undoList, redoList):
     '''
-    adauga o rezervare noua
-    :param id: str
-    :param nume: str
-    :param clasa: str
-    :param pret: float
-    :param checkin: str
-    :param lista: lista initiala
-    :return:lista initiala cu adaugarea inclusa
+    adauga o noua rezervare
+    :param id: id ul rezervarii
+    :param nume: numele ei
+    :param clasa: clasa ei
+    :param pret: pretul ei
+    :param checkin: daca are facut checkin-ul sau nu
+    :param lista: lista cu toate rezervarile
+    :return: lista cu noua rezervare adaugata
     '''
-    if getById(id, lista) is not None:
-        raise ValueError("Id-ul exista deja!")
-    rezervare = creeazaRezervare(id, nume, clasa, pret, checkin)
+    for rez in lista:
+        if getId(rez) == id:
+            raise ValueError("Exista deja o rezervare cu acest id")
+    rezervare= creeazaRezervare(id, nume, clasa, pret, checkin)
+    undoList.append(lista)
+    redoList.clear()
     return lista + [rezervare]
 
 
-def stergereRezervare(id, lista):
+def stergeRezervare(id, lista, undoList, redoList):
     '''
-    sterge rezervarea dupa id-ul din lista
-    :param id: id-ul rezervarii de sters, str
-    :param lista:lista de rezervari
-    :return: o lista continand rezervarile cu id-ul direrit de id
+    sterge rezervari cu un anumit id din lista
+    :param id: id-ul rezervarii de sters
+    :param lista: lista cu rezervari
+    :return: o lista de rezervari cu id-ul diferit de id
     '''
-    if getById(id, lista) is None:
-        raise ValueError("Nu exista o prajitura cu Id-ul dat!")
-    return [rezervare for rezervare in lista if getId(rezervare) != id]
+    lista_noua = []
+    for rezervare in lista:
+        if getId(rezervare) != id:
+            lista_noua.append(rezervare)
+    return lista_noua
 
 
-def modificaRezervare(id, nume, clasa, pret, checkin, lista):
+def modificaRezervare(id,nume,clasa,pret,checkin, lista, undoList, redoList):
     '''
     modifica o rezervare
-    :param id: id actual
-    :param nume: nume nou
-    :param clasa:clasa noua
-    :param pret: pret nou
-    :param checkin:checkin nou
-    :param lista: lista initiala de rezervari
-    :return:lista initiala cu modificarea inclusa
+    :param id: id ul ei
+    :param nume: numele ei
+    :param clasa: clasa ei
+    :param pret: pretul ei
+    :param checkin: daca are facut checkin ul
+    :param lista: lista cu rezervarile
+    :return: lista cu rezervarea noua modificata
     '''
-    if getById(id, lista) is None:
-        raise ValueError("Nu exista o prajitura cu Id-ul dat!")
-    listaNoua = []
+    listaNoua= []
     for rezervare in lista:
         if getId(rezervare) == id:
             rezervareNoua = creeazaRezervare(id, nume, clasa, pret, checkin)
             listaNoua.append(rezervareNoua)
         else:
             listaNoua.append(rezervare)
+    undoList.append(lista)
+    redoList.clear()
     return listaNoua
 
 
 def getById(id, lista):
     '''
-    gaseste o rezervare cu id-ul dat intr-o lista
-    :param id: str
-    :param lista: lista de rezervari
-    :return:rezervarea cu id-ul dat din lista sau None, daca aceasta nu exista
+    gaseste o anumite rezervare
+    :param id: idul rezervarii de gasit
+    :param lista: lista cu rezervari
+    :return: rezervarea gasita
     '''
-
     for rezervare in lista:
         if getId(rezervare) == id:
             return rezervare
